@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Transcribe — Free Audio &amp; Video to Text and Subtitles (Whisper, private) | S3eidat Tools</title>
+<meta name="description" content="Transcribe audio and video to text, SRT and VTT subtitles with OpenAI Whisper running in your browser. Arabic, English and 90+ languages, translate to English. Free, private, nothing uploaded.">
+<meta property="og:title" content="Transcribe — free, private Whisper transcription in your browser">
+<meta property="og:description" content="Audio and video to text and subtitles with Whisper. Runs 100% on your device.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/transcribe/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/transcribe/">
+<meta property="og:image" content="https://s3eidat.github.io/transcribe/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Transcribe — Audio and video to text and subtitles, privately">
+<meta name="twitter:description" content="Audio and video to text and subtitles, privately. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/transcribe/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Transcribe", "url": "https://s3eidat.github.io/transcribe/", "description": "Audio and video to text and subtitles, privately. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/transcribe/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="transcribe">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Transcribe</h1>
+    <p>Turn audio and video into text and subtitles with OpenAI's Whisper, running right here in your browser. Your recordings never leave this device.</p>
+  </section>
+
+  <div class="grid-2 tx-grid">
+   <div class="stack-cards tx-left">
+    <section class="card stack" aria-labelledby="h-audio">
+      <div class="row between">
+        <h2 id="h-audio">Audio</h2>
+        <div class="row">
+          <button class="btn ghost small" id="sample"><svg class="i"><use href="#i-play"/></svg>Try a sample</button>
+        </div>
+      </div>
+
+      <label class="drop" id="drop">
+        <input type="file" hidden>
+        <svg class="i"><use href="#i-upload"/></svg>
+        <b>Drop an audio or video file, or click to choose</b>
+        <span class="faint">MP3, WAV, M4A, OGG, Opus, FLAC, MP4, WebM, MOV… anything your browser can play</span>
+      </label>
+
+      <div class="row tx-recrow">
+        <button class="btn" id="rec"><span class="tx-dot" aria-hidden="true"></span><span id="recLbl">Record from microphone</span></button>
+        <span class="chip mono" id="recTime" hidden>0:00</span>
+        <span class="grow"></span>
+        <span class="faint tx-small">The mic is only requested when you press Record.</span>
+      </div>
+
+      <div class="tx-file stack" id="file" hidden>
+        <div class="row between">
+          <b class="tx-fname" id="fname">audio</b>
+          <span class="chip" id="finfo"></span>
+        </div>
+        <audio id="player" controls preload="metadata"></audio>
+      </div>
+    </section>
+
+    <section class="card stack" aria-labelledby="h-opts">
+      <h2 id="h-opts">Options</h2>
+      <label class="field">Spoken language
+        <select class="select" id="lang"></select>
+      </label>
+      <div class="seg" id="task" role="group" aria-label="Task">
+        <button aria-pressed="true" data-v="transcribe">Transcribe</button>
+        <button aria-pressed="false" data-v="translate">Translate to English</button>
+      </div>
+      <label class="check"><input type="checkbox" id="stamps" checked> Show timestamps in the transcript, TXT and copy</label>
+      <div class="tx-model" id="model">
+        <svg class="i"><use href="#i-download"/></svg>
+        <div><b id="modelTitle">Whisper base, 8-bit</b><span class="faint" id="modelNote">First use downloads about 100 MB (model 81 MB + runtime 22 MB) from this site, once. After that it's cached on this device and works offline.</span></div>
+      </div>
+      <div class="row">
+        <button class="btn primary big" id="go" disabled>Transcribe</button>
+        <button class="btn" id="cancel" hidden><svg class="i"><use href="#i-x"/></svg>Cancel</button>
+        <span class="grow"></span>
+        <button class="btn ghost small" id="forget" hidden title="Delete the cached model from this browser">Remove model</button>
+      </div>
+      <div class="tx-prog" id="prog" hidden>
+        <div class="row between"><span id="progLbl">Loading…</span><span class="mono faint" id="progNum"></span></div>
+        <div class="tx-bar"><i id="progBar"></i></div>
+      </div>
+    </section>
+   </div>
+
+  <section class="card stack tx-result" aria-labelledby="h-out">
+    <div class="row between">
+      <h2 id="h-out">Transcript</h2>
+      <div class="row tx-exports">
+        <button class="btn small" id="copy" disabled><svg class="i"><use href="#i-copy"/></svg>Copy</button>
+        <button class="btn small" id="txt" disabled><svg class="i"><use href="#i-download"/></svg>.txt</button>
+        <button class="btn small" id="srt" disabled><svg class="i"><use href="#i-download"/></svg>.srt</button>
+        <button class="btn small" id="vtt" disabled><svg class="i"><use href="#i-download"/></svg>.vtt</button>
+      </div>
+    </div>
+    <div class="stats" id="stats" hidden></div>
+    <div class="empty" id="empty"><b>No transcript yet</b>Choose a file or record, pick the language (or leave it on Auto), then press Transcribe. Long recordings are processed in 30-second windows.</div>
+    <div class="tx-live" id="live" hidden dir="auto"></div>
+    <div class="tx-segs" id="segs" hidden></div>
+    <p class="faint tx-small" id="editHint" hidden>Click any line to fix it; exports use your edits. Click a time to jump there in the player.</p>
+  </section>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+.tx-grid { align-items: start; }
+.tx-left, .tx-result { min-width: 0; }
+.tx-small { font-size: 12.5px; }
+.tx-recrow { gap: 10px; }
+.tx-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--danger); box-shadow: 0 0 0 3px var(--danger-soft); flex: none; }
+.tx-recording .tx-dot { border-radius: 3px; animation: tx-blink 1s infinite; }
+.tx-recording #rec { border-color: var(--danger); }
+@keyframes tx-blink { 50% { opacity: .35; } }
+.drop.tx-compact { display: flex; justify-content: center; align-items: center; padding: 14px; gap: 10px; }
+.drop.tx-compact > span { display: none; }
+.drop.tx-compact svg.i { width: 20px; height: 20px; }
+.drop.tx-compact b { font-size: 14px; }
+.tx-locked { pointer-events: none; opacity: .55; }
+
+.tx-file { padding: 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); gap: 10px; }
+.tx-fname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+.tx-file audio { width: 100%; height: 40px; }
+
+.tx-opts { gap: 12px; }
+.tx-model { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); font-size: 13px; }
+.tx-model svg.i { flex: none; margin-top: 2px; color: var(--accent); }
+.tx-model div { display: grid; gap: 2px; }
+.tx-model.is-cached svg.i { color: var(--ok); }
+
+.tx-prog { display: grid; gap: 8px; font-size: 13px; }
+.tx-prog #progLbl { min-width: 0; }
+.tx-bar { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; position: relative; }
+.tx-bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: inherit; transition: width .25s var(--ease); }
+.tx-bar i.busy { width: 35%; animation: tx-slide 1.3s infinite var(--ease); }
+@keyframes tx-slide { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+
+.tx-result { position: sticky; top: 12px; }
+.tx-exports { gap: 6px; }
+.tx-result .stats { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; }
+.tx-result .stat { padding: 10px 12px; }
+.tx-result .stat b { font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tx-live { max-height: 420px; overflow: auto; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); border: 1px dashed var(--line-strong); color: var(--text-2); white-space: pre-wrap; line-height: 1.6; }
+.tx-live:empty::after { content: "The words appear here as Whisper hears them. The first 30-second window takes a few seconds."; color: var(--text-3); font-size: 13.5px; }
+.tx-live::before { content: "Live draft"; display: block; font-size: 11.5px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--accent); margin-bottom: 6px; }
+
+.tx-segs { display: grid; gap: 2px; max-height: 560px; overflow: auto; margin: 0 -6px; padding: 0 6px; }
+.tx-seg { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 6px; align-items: start; border-radius: 10px; padding: 2px; }
+.tx-seg.is-now { background: var(--accent-soft); }
+.tx-t { background: none; border: 0; padding: 7px 4px; color: var(--accent); font-size: 12.5px; cursor: pointer; text-align: start; border-radius: 6px; }
+.tx-t:hover { text-decoration: underline; }
+.tx-text { width: 100%; resize: none; overflow: hidden; border: 1px solid transparent; background: transparent; color: var(--text); font: inherit; font-size: 15px; line-height: 1.55; padding: 5px 8px; border-radius: 8px; min-height: 0; }
+.tx-text:hover { background: var(--surface-2); }
+.tx-text:focus { outline: none; border-color: var(--accent); background: var(--surface-2); }
+.tx-segs.no-times .tx-seg { grid-template-columns: minmax(0, 1fr); }
+.tx-segs.no-times .tx-t { display: none; }
+
+@media (max-width: 760px) {
+  .tx-result { position: static; }
+  .tx-segs { max-height: none; }
+}
